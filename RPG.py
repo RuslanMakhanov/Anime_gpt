@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 version = "0.0.8 RPG update"
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
+openai.api_key = "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"
 client = openai.OpenAI()
 
 

@@ -17,7 +17,7 @@ except FileNotFoundError:
     print("Trigger_words_file not found, we make a new :)")
     trigger_words_data = {'trigger_words': []}
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
+openai.api_key = "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"
 
 client = openai.OpenAI()
 
