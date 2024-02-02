@@ -1,4 +1,8 @@
 import openai
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 version = "0.0.9 Async update (aiogram)"
 
@@ -14,7 +18,7 @@ except FileNotFoundError:
     trigger_words_data = {'trigger_words': []}
 
 client = openai.OpenAI()
-
+client.api_key = os.getenv("OPENAI_API_KEY")
 
 messages = [
     {
