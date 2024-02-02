@@ -1,8 +1,11 @@
 import openai
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
 version = "0.0.8 RPG update"
 
-
+openai.api_key = os.getenv("OPENAI_API_KEY")
 client = openai.OpenAI()
 
 
