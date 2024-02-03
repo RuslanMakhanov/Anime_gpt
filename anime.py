@@ -1,8 +1,7 @@
 import openai
 
 
-
-version = "0.0.9 Async update (aiogram)"
+version = "0.0.10 RaspberyPi"
 
 # Путь к файлу для хранения триггерных слов
 trigger_words_file = 'trigger_words.json'

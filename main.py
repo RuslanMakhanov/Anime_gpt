@@ -1,10 +1,12 @@
 import asyncio
+
+import func
 import handlers  # НЕ УДАЛЯЙ БЛЯТЬ ЕГО
 import misc
 
 
 async def on_startup():
-    await misc.bot.send_message(chat_id=-1001715912916, text="Опа кажись был перезапуск")
+    await misc.bot.send_message(chat_id=-1001715912916, text=f"{func.get_time_text()} - Сервер упал, но снова поднялся")
 
 
 async def main():

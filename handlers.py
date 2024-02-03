@@ -1,7 +1,7 @@
 import json
 
 from aiogram.filters import Command
-from aiogram.types import Message
+from aiogram.types import Message, FSInputFile
 
 import config as cfg
 import func
@@ -9,7 +9,7 @@ from RPG import get_rpg_game
 from anime import anime_girl
 from misc import dp
 
-version = "0.0.9 Async update (aiogram)"
+version = "0.0.10 RaspberyPi"
 
 # Загружаем существующие триггерные слова из файла
 try:
@@ -49,9 +49,14 @@ async def start_handler(msg: Message):
 
 
 @dp.message(Command("id"))
-async def chat_id(msg: Message):
+async def get_chat_id(msg: Message):
     chat_id = str(msg.chat.id)
     await msg.answer("ИД данного чата: " + chat_id)
+
+
+@dp.message(Command("self_image"))
+async def sent_self_image(msg: Message):
+    await msg.answer_photo(photo=FSInputFile('image.jpeg'))
 
 
 @dp.message(Command("add_trigger"))
@@ -106,8 +111,7 @@ async def handle_exit(msg: Message):
 
 @dp.message(Command("status"))
 async def handle_status(msg: Message):
-    user_id = str(msg.from_user.id)
-    await msg.answer(user_states.get(user_id))
+    await msg.answer(f"{func.get_time_text()} - Включен")
 
 
 @dp.message(Command("idle"))

@@ -2,7 +2,7 @@ import openai
 
 
 
-version = "0.0.8 RPG update"
+version = "0.0.10 RaspberyPi"
 
 client = openai.OpenAI()
 
