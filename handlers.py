@@ -1,34 +1,36 @@
-import json
-
 from aiogram.filters import Command
 from aiogram.types import Message, FSInputFile
 
-import config as cfg
-import func
+from func import *
 from RPG import get_rpg_game
 from anime import anime_girl
 from misc import dp
 
+from menu import *
+
 version = "0.0.10 RaspberyPi"
 
-# Загружаем существующие триггерные слова из файла
-try:
-    with open(cfg.trigger_words_file, 'r') as file_trigger_words:
-        trigger_words_data = {'trigger_words': [line.strip() for line in file_trigger_words.readlines()]}
-        print('Trigger_words_data is loading SEXessful')
-except FileNotFoundError:
-    print("Trigger_words_file not found, we make a new :)")
-    trigger_words_data = {'trigger_words': []}
 
-# Загрузка данных из файла
-try:
-    with open(cfg.user_states_file, 'r') as file_user_states:
-        user_states = json.load(file_user_states)
-        print("User_states is loading SEXessful")
-except FileNotFoundError:
-    # Если файл не найден, начинаем с пустого словаря
-    user_states = {}
-    print("User_states_file not found, we make a new :)")
+def create_menu_handler(menu_list, menu_actions):
+    @dp.message(lambda message: message.text in menu_list)
+    async def create_menu(msg: Message):
+        await handle_menu(msg, menu_actions)
+
+
+async def handle_menu(msg, menu_actions):
+    """
+    Обработка действий меню
+    :param msg: Message
+    :param menu_actions: Словарь действий
+    """
+    selected_option = menu_actions.get(msg.text)
+    if selected_option:
+        user_state, response_text, reply_markup = selected_option
+        set_user_state(msg, user_state)
+        await msg.delete()
+        await msg.answer(response_text, reply_markup=reply_markup)
+    else:
+        await msg.answer("Неизвестная опция в меню.")
 
 
 @dp.message(Command("start"))
@@ -44,8 +46,14 @@ async def start_handler(msg: Message):
     else:
         await msg.answer(f"И снова привет, {user_name}! Бот готов с вами общаться, напиши ей. "
                          "\nНапример: Аска, привет. Я новый пользователь. Расскажи о себе.")
-    user_states[user_id] = 'idle'
-    func.save_in_json(user_states, cfg.user_states_file)
+
+    set_user_state(msg, 'idle')
+
+
+@dp.message(Command("menu"))
+async def get_menu(msg: Message):
+    await msg.answer("🏡 Вы в главном меню 🏡", reply_markup=main_menu_1)
+    set_user_state(msg, "idle")
 
 
 @dp.message(Command("id"))
@@ -96,8 +104,7 @@ async def handle_rpg(msg: Message):
     if user_states.get(user_id) == 'idle':
         await msg.answer('Вы находитесь в текстовом РПГ, для выхода напишите '
                          '/exit, или для начала напишите Старт.')
-        user_states[user_id] = 'in_rpg_game'
-        func.save_in_json(user_states, cfg.user_states_file)
+        set_user_state(msg, "in_rpg_game")
 
 
 @dp.message(Command("exit"))
@@ -105,21 +112,31 @@ async def handle_exit(msg: Message):
     user_id = str(msg.from_user.id)
     if user_states.get(user_id) != 'idle':
         await msg.answer('Ваш статус "idle", вы можете продолжать общаться с Аской')
-        user_states[user_id] = 'idle'
-        func.save_in_json(user_states, cfg.user_states_file)
+        set_user_state(msg, "idle")
 
 
 @dp.message(Command("status"))
 async def handle_status(msg: Message):
-    await msg.answer(f"{func.get_time_text()} - Включен")
+    await msg.answer(f"{get_time_text()} - Включен")
 
 
 @dp.message(Command("idle"))
 async def handle_idle(msg: Message):
     user_id = str(msg.from_user.id)
     await msg.answer('Вы установили статус "idle"')
-    user_states[user_id] = 'idle'
-    func.save_in_json(user_states, cfg.user_states_file)
+    set_user_state(msg, "idle")
+
+
+create_menu_handler(main_menu_list,main_menu_actions)
+
+
+@dp.message(lambda message: message.text == "Назад")
+async def back(msg: Message):
+    user_id = str(msg.from_user.id)
+    if user_states.get(user_id) in ["settings", "debug", "games"]:
+        set_user_state(msg, "idle")
+        await msg.delete()
+        await msg.answer("🏡 Вы в главном меню 🏡", reply_markup=main_menu_1)
 
 
 @dp.message()
@@ -135,3 +152,4 @@ async def message_handler(msg: Message):
         elif user_states.get(user_id) == 'in_rpg_game':
             await msg.answer(get_rpg_game(msg.text, user_name, user_id))
             pass
+

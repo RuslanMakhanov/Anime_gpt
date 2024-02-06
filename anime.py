@@ -1,5 +1,5 @@
 import openai
-
+import requests
 
 version = "0.0.10 RaspberyPi"
 
@@ -80,7 +80,10 @@ def anime_girl(user_message, user_name, user_id):
                 f" вы превысили длину запросов (с учетом контекста сообщений). Следующий запрос будет выполнен в"
                 f" рамках нового контекста. Спасибо за понимание."
                 f" Я человек не богатый и раскошелится на GPT-4 пока не могу")
-
+    except requests.exceptions.HTTPError as err:
+        if err.response.status_code == 429:
+            text = "GG WP Квота закончилась нужны мани фор тзис"
+            return text
     except openai.APIConnectionError:
         print("OpenAI server connection time out")
         return f"Произошла ошибка подключения к серверам OpenAI, попробуйте позже"
@@ -88,7 +91,9 @@ def anime_girl(user_message, user_name, user_id):
     except openai.InternalServerError:
         return f"Ошибка на сервере OpenAI, попробуйте позже"
         pass
-
+    except openai.RateLimitError:
+        return "GG WP NEED SOME MONEY ПЛЯЖ"
     except Exception as e:
         # Обработка других ошибок
         print(f"Произошла ошибка: {e}")
+
