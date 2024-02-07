@@ -6,9 +6,8 @@ from RPG import get_rpg_game
 from anime import anime_girl
 from misc import dp
 
-from menu import *
 
-version = "0.1.0 RaspberyPi"
+version = "0.1.0 Raspberry Pi"
 
 
 @dp.message(Command("start"))
@@ -19,11 +18,11 @@ async def start_handler(msg: Message):
     # Отправляем приветственное сообщение
     if user_id not in user_states:
         await msg.answer(f"Привет, {user_name}! Теперь бот готов с вами общаться, напиши ей. "
-                         "\nНапример: Аска, привет. Я новый пользователь. Расскажи о себе.")
+                         "\nНапример: Аска, привет. Я новый пользователь. Расскажи о себе.", reply_markup=None)
         print(f'A new user: {user_name}, with user_id: {user_id}')
     else:
         await msg.answer(f"И снова привет, {user_name}! Бот готов с вами общаться, напиши ей. "
-                         "\nНапример: Аска, привет. Я новый пользователь. Расскажи о себе.")
+                         "\nНапример: Аска, привет. Что нового у тебя.", reply_markup=None)
 
     set_user_state(msg, 'idle')
 
@@ -111,4 +110,3 @@ async def message_handler(msg: Message):
         elif user_states.get(user_id) == 'in_rpg_game':
             await msg.answer(get_rpg_game(msg.text, user_name, user_id))
             pass
-

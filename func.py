@@ -5,9 +5,9 @@ import config as cfg
 try:
     with open(cfg.trigger_words_file, 'r') as file_trigger_words:
         trigger_words_data = {'trigger_words': [line.strip() for line in file_trigger_words.readlines()]}
-        print('Trigger_words_data is loading SEXessful')
+        print(f'{cfg.trigger_words_file} is loading SEXessful')
 except FileNotFoundError:
-    print("Trigger_words_file not found, we make a new :)")
+    print(f"{cfg.trigger_words_file} not found, we make a new :)")
     trigger_words_data = {'trigger_words': []}
 
 
@@ -41,4 +41,3 @@ def set_user_state(msg, state):
     user_id = str(msg.from_user.id)
     user_states[user_id] = state
     save_in_json(user_states, cfg.user_states_file)
-
