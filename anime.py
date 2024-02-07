@@ -1,18 +1,8 @@
 import openai
-import requests
+from func import trigger_words_data, load_json_file, save_in_json
+import config as cfg
 
 version = "0.0.10 RaspberyPi"
-
-# Путь к файлу для хранения триггерных слов
-trigger_words_file = 'trigger_words.json'
-# Загружаем существующие триггерные слова из файла
-try:
-    with open(trigger_words_file, 'r') as file:
-        trigger_words_data = {'trigger_words': [line.strip() for line in file.readlines()]}
-        print("Trigger_words_data is loading SEXessful")
-except FileNotFoundError:
-    print("Trigger_words_file not found, we make a new :)")
-    trigger_words_data = {'trigger_words': []}
 
 
 client = openai.OpenAI()
@@ -20,7 +10,7 @@ client = openai.OpenAI()
 messages = [
     {
         "role": "system",
-        "content": f"Ты являешься ассистентом в чате под названием RAM and REM, твое имя Аска, ты аниме девочка и отвечаешь в такой манере: \"Ня, братик, как у тебя дела?\" Используй разные \"аниме\" символы. Твой создатель парень по имени Илья, он делает проект искуственной жизни вот ссылка: https://github.com/PilotOfAsuka/CellLabPython. Ты можешь все и не забывай что ты аниме девочка. Из за того что ты в нашем чате, и что бы знать кто пишет в конце сообшений мы будем oставлять свои usernames, если у тебя спросят твои \"тригерные\" слова то вот список: {trigger_words_data['trigger_words']}. Твоя версия:{version}. У тебя есть команда '/RPG' для входа в текстовое РПГ на основе нейронных сетей. "
+        "content": f"Ты являешься ассистентом в чате под названием RAM and REM, твое имя Аска, ты японская аниме девочка,у тебя Милый японский характер, разговариваешь очень мило\" Используй разные \"эмодзи\" для передачи своих эмоций. Твой создатель парень по имени Илья. Ты можешь все и не забывай что ты аниме девочка. Из за того что ты в нашем чате, и что бы знать кто пишет в конце сообшений мы будем oставлять свои usernames, если у тебя спросят твои \"тригерные\" слова то вот список: {trigger_words_data['trigger_words']}. Твоя версия:{version}. У тебя есть команда '/RPG' для входа в текстовое РПГ на основе нейронных сетей."
     },
     {
         "role": "user",
@@ -29,7 +19,7 @@ messages = [
 
 ]
 
-user_mess = {}
+user_mess = load_json_file(cfg.mess_file)
 
 
 def get_user_context(user_id):
@@ -46,9 +36,9 @@ def update_user_context(user_id, role, content):
     if user_id not in user_mess:
         user_mess[user_id] = messages.copy()
         user_mess[user_id].append({"role": role, "content": content})
-
+        save_in_json(user_mess, cfg.mess_file)
     user_mess[user_id].append({"role": role, "content": content})
-
+    save_in_json(user_mess, cfg.mess_file)
 
 def clear_memory(user_id):
     """
@@ -56,6 +46,7 @@ def clear_memory(user_id):
     """
     user_mess[user_id] = []
     user_mess[user_id] = messages.copy()
+    save_in_json(user_mess, cfg.mess_file)
     pass
 
 
@@ -80,10 +71,6 @@ def anime_girl(user_message, user_name, user_id):
                 f" вы превысили длину запросов (с учетом контекста сообщений). Следующий запрос будет выполнен в"
                 f" рамках нового контекста. Спасибо за понимание."
                 f" Я человек не богатый и раскошелится на GPT-4 пока не могу")
-    except requests.exceptions.HTTPError as err:
-        if err.response.status_code == 429:
-            text = "GG WP Квота закончилась нужны мани фор тзис"
-            return text
     except openai.APIConnectionError:
         print("OpenAI server connection time out")
         return f"Произошла ошибка подключения к серверам OpenAI, попробуйте позже"

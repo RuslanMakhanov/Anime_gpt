@@ -8,29 +8,7 @@ from misc import dp
 
 from menu import *
 
-version = "0.0.10 RaspberyPi"
-
-
-def create_menu_handler(menu_list, menu_actions):
-    @dp.message(lambda message: message.text in menu_list)
-    async def create_menu(msg: Message):
-        await handle_menu(msg, menu_actions)
-
-
-async def handle_menu(msg, menu_actions):
-    """
-    Обработка действий меню
-    :param msg: Message
-    :param menu_actions: Словарь действий
-    """
-    selected_option = menu_actions.get(msg.text)
-    if selected_option:
-        user_state, response_text, reply_markup = selected_option
-        set_user_state(msg, user_state)
-        await msg.delete()
-        await msg.answer(response_text, reply_markup=reply_markup)
-    else:
-        await msg.answer("Неизвестная опция в меню.")
+version = "0.1.0 RaspberyPi"
 
 
 @dp.message(Command("start"))
@@ -48,12 +26,6 @@ async def start_handler(msg: Message):
                          "\nНапример: Аска, привет. Я новый пользователь. Расскажи о себе.")
 
     set_user_state(msg, 'idle')
-
-
-@dp.message(Command("menu"))
-async def get_menu(msg: Message):
-    await msg.answer("🏡 Вы в главном меню 🏡", reply_markup=main_menu_1)
-    set_user_state(msg, "idle")
 
 
 @dp.message(Command("id"))
@@ -122,21 +94,8 @@ async def handle_status(msg: Message):
 
 @dp.message(Command("idle"))
 async def handle_idle(msg: Message):
-    user_id = str(msg.from_user.id)
     await msg.answer('Вы установили статус "idle"')
     set_user_state(msg, "idle")
-
-
-create_menu_handler(main_menu_list,main_menu_actions)
-
-
-@dp.message(lambda message: message.text == "Назад")
-async def back(msg: Message):
-    user_id = str(msg.from_user.id)
-    if user_states.get(user_id) in ["settings", "debug", "games"]:
-        set_user_state(msg, "idle")
-        await msg.delete()
-        await msg.answer("🏡 Вы в главном меню 🏡", reply_markup=main_menu_1)
 
 
 @dp.message()
