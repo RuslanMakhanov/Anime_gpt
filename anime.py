@@ -1,5 +1,5 @@
 import openai
-from func import trigger_words_data, load_json_file, save_in_json, get_time_text
+from func import load_json_file, save_in_json, get_time_text
 import config as cfg
 
 version = "0.1.0 Raspberry Pi"
