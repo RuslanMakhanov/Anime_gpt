@@ -1,35 +1,20 @@
 import asyncio
-from datetime import datetime, timedelta
-
 from func import get_time_text
 import handlers  # НЕ УДАЛЯЙ БЛЯТЬ ЕГО
 import misc
+from modules.task import send_message_at
+from anime import anime_girl
 
 async def on_startup():
     await misc.bot.send_message(chat_id=-1002015022612, text=f"{get_time_text()} - Сервер упал, но снова поднялся")
 
-# Функция, которая отправляет сообщение каждые N секунд
-# Функция, которая отправляет сообщение в 22:00 каждый день
-async def send_message_at_22():
-    while True:
-        # Получаем текущее время
-        now = datetime.now()
-
-        # Вычисляем время до 22:00 сегодня
-        target_time = datetime(now.year, now.month, now.day, 22, 0)
-        if now > target_time:
-            # Если уже прошло 22:00 сегодня, переходим к 22:00 следующего дня
-            target_time += timedelta(days=1)
-
-        # Ожидаем до момента отправки сообщения в 22:00
-        await asyncio.sleep((target_time - now).total_seconds())
-
-        # Отправляем сообщение
-        await misc.bot.send_message(chat_id='-1002015022612', text='Привет, оповещение в 22:00')
 
 async def main():
     # Создание задачи для отправки периодических сообщений
-    asyncio.ensure_future(send_message_at_22())
+    asyncio.ensure_future(send_message_at(9, 00, anime_girl("Аска, Пожелай спокойной ночи Руслану, ТОЛЬКО ПОЖЕЛАНИЕ ЕМУ, НЕЧЕГО ЛИШНЕГО",
+                                    "admin", "111", update_content=False)))
+    asyncio.ensure_future(send_message_at(20, 00, anime_girl("Аска, Пожелай доброе утро Руслану, ТОЛЬКО ПОЖЕЛАНИЕ ЕМУ, НЕЧЕГО ЛИШНЕГО",
+                                    "admin", "111", update_content=False)))
 
     # Регистрация функции on_startup
     misc.dp.startup.register(on_startup)

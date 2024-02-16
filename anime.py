@@ -53,10 +53,12 @@ def clear_memory(user_id):
     pass
 
 
-def anime_girl(user_message, user_name, user_id):
+def anime_girl(user_message, user_name, user_id, update_content=True):
     try:
         message = user_message.replace("аска", "").strip().lower()
+
         update_user_context(user_id, "user", f"{message}, сообщение от {user_name}")
+
         response = client.chat.completions.create(
             messages=get_user_context(user_id),
             model='gpt-3.5-turbo',
@@ -64,7 +66,10 @@ def anime_girl(user_message, user_name, user_id):
             max_tokens=350,
             n=1,
         )
-        update_user_context(user_id, "assistant", response.choices[0].message.content)
+
+        if update_content:
+            update_user_context(user_id, "assistant", response.choices[0].message.content)
+
         print(f"{get_time_text(date=True)}: For user: {user_name}, generated response")
         return response.choices[0].message.content
 
