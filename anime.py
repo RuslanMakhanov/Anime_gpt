@@ -57,7 +57,11 @@ def anime_girl(user_message, user_name, user_id, update_content=True):
     try:
         message = user_message.replace("аска", "").strip().lower()
 
-        update_user_context(user_id, "user", f"{message}, сообщение от {user_name}")
+        if update_content:
+            update_user_context(user_id, "user", f"{message}, сообщение от {user_name}")
+
+        if not update_content:
+            update_user_context(user_id, "user", f"{message}")
 
         response = client.chat.completions.create(
             messages=get_user_context(user_id),

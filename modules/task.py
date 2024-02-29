@@ -1,7 +1,6 @@
 from datetime import datetime, timedelta
 import misc
 import asyncio
-from anime import anime_girl
 
 
 # Функция, которая отправляет сообщение в N часов каждый день

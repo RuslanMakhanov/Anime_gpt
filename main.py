@@ -11,10 +11,10 @@ async def on_startup():
 
 async def main():
     # Создание задачи для отправки периодических сообщений
-    asyncio.ensure_future(send_message_at(9, 00, anime_girl("Аска, Пожелай спокойной ночи Руслану, ТОЛЬКО ПОЖЕЛАНИЕ ЕМУ, НЕЧЕГО ЛИШНЕГО",
-                                    "admin", "111", update_content=False)))
-    asyncio.ensure_future(send_message_at(20, 00, anime_girl("Аска, Пожелай доброе утро Руслану, ТОЛЬКО ПОЖЕЛАНИЕ ЕМУ, НЕЧЕГО ЛИШНЕГО",
-                                    "admin", "111", update_content=False)))
+    asyncio.ensure_future(send_message_at(9, 00, anime_girl("Пожелай спокойной ночи Руслану, не используй слово 'конечно', просто пожелание от тебя",
+                                    "", "111", update_content=False)))
+    asyncio.ensure_future(send_message_at(20, 00, anime_girl("Пожелай доброе утро Руслану, не используй слово 'конечно', просто пожелание от тебя",
+                                    "", "111", update_content=False)))
 
     # Регистрация функции on_startup
     misc.dp.startup.register(on_startup)
