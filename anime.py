@@ -53,7 +53,7 @@ def clear_memory(user_id):
     pass
 
 
-def anime_girl(user_message, user_name, user_id, update_content=True):
+def anime_girl(user_message, user_name, user_id, update_content=True) -> str:
     try:
         message = user_message.replace("аска", "").strip().lower()
 

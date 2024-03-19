@@ -1,9 +1,11 @@
 from aiogram.filters import Command
-from aiogram.types import Message, FSInputFile
+from aiogram.types import Message, FSInputFile, Audio
 from func import *
 from RPG import get_rpg_game
 from anime import anime_girl
 from misc import dp
+from aiogram import F
+from modules.stt import save_voice_as_mp3, audio_to_text
 
 version = "0.1.0 Raspberry Pi"
 
@@ -95,16 +97,28 @@ async def handle_idle(msg: Message):
     set_user_state(msg, "idle")
 
 
-@dp.message()
+@dp.message(F.voice)
+async def audio(msg: Message):
+    mp3_voice_path = await save_voice_as_mp3(voice=msg.voice)
+    stt_text = await audio_to_text(mp3_voice_path)
+    if stt_text:
+        await text_handler_from_user(msg, stt_text)
+
+
+@dp.message(F.text)
 async def message_handler(msg: Message):
+    await text_handler_from_user(msg, msg.text)
+
+
+async def text_handler_from_user(msg, text):
     user_name = msg.from_user.username
     user_id = str(msg.from_user.id)
-    if msg.text is not None:
-        if (any(word in msg.text.lower() for word in trigger_words_data['trigger_words'])
+    if text is not None:
+        if (any(word in text.lower() for word in trigger_words_data['trigger_words'])
                 and user_states.get(user_id) == 'idle'):
             print(f'{get_time_text(date=True)}: Update is handled from {user_name}:{user_id}')
-            await msg.answer(anime_girl(msg.text, user_name, user_id))
+            await msg.answer(anime_girl(text, user_name, user_id))
 
         elif user_states.get(user_id) == 'in_rpg_game':
-            await msg.answer(get_rpg_game(msg.text, user_name, user_id))
+            await msg.answer(get_rpg_game(text, user_name, user_id))
             pass
