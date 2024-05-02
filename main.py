@@ -9,7 +9,7 @@ ram_rem_chat = '-1002015022612'
 ls = '5848061277'
 
 async def on_startup():
-    await misc.bot.send_message(chat_id=ram_rem_chat, text=f"{get_time_text()} - Сервер упал, но снова поднялся")
+    await misc.bot.send_message(chat_id=-1002015022612, text=f"{get_time_text()} - Сервер упал, но снова поднялся")
 
 
 async def main():
