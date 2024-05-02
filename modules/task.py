@@ -4,7 +4,7 @@ import asyncio
 
 
 # Функция, которая отправляет сообщение в N часов каждый день
-async def send_message_at(hour, minutes, text):
+async def send_message_at(hour, minutes, text, chat_id):
     # 'ВРЕМЯ' - hours, minutes
     while True:
         # Получаем текущее время
@@ -20,5 +20,5 @@ async def send_message_at(hour, minutes, text):
         await asyncio.sleep((target_time - now).total_seconds())
 
         # Отправляем сообщение
-        await misc.bot.send_message(chat_id='-1002015022612',
+        await misc.bot.send_message(chat_id=chat_id,
                                     text=text)

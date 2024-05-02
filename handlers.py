@@ -1,11 +1,13 @@
 from aiogram.filters import Command
-from aiogram.types import Message, FSInputFile, Audio
+from aiogram.types import Message, FSInputFile
+
 from func import *
 from RPG import get_rpg_game
 from anime import anime_girl
 from misc import dp
 from aiogram import F
 from modules.stt import save_voice_as_mp3, audio_to_text
+from modules.anime_one import send_anime_girl
 
 version = "0.1.0 Raspberry Pi"
 
@@ -95,6 +97,25 @@ async def handle_status(msg: Message):
 async def handle_idle(msg: Message):
     await msg.answer('Вы установили статус "idle"')
     set_user_state(msg, "idle")
+
+
+@dp.message(Command("smoke_free"))
+async def smoke_free_handler(msg: Message):
+    # Получаем текст сообщения
+    original_text = msg.text
+    user_name = msg.from_user.username
+    # Удаляем слово из текста
+    replace_text = original_text.replace("/smoke_free", "").strip().lower()
+    if replace_text:
+        if check_date_format(replace_text):
+            set_user_smoke_free(msg=msg, date=replace_text)
+            await msg.answer(send_anime_girl(task=f"уведомление что успешно установлена дата когда я бросил курить:{replace_text}", user_name=msg.from_user.username))
+        else:
+            await msg.answer("Дата введена не верно попробуйте еще раз\nПример: /smoke_free 2024-04-28")
+    else:
+        await msg.answer("Введите дату, когда вы бросили курить!\nПример: /smoke_free 2024-04-28")
+
+    pass
 
 
 @dp.message(F.voice)
