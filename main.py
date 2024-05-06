@@ -13,11 +13,15 @@ async def on_startup():
 
 
 async def main():
-    # Создание задачи для отправки периодических сообщений
-    asyncio.ensure_future(send_message_at(hour=9, minutes=00, text=send_anime_girl("Спокойной ночи Руслану, пожелание тебя, для Руслана", "admin",), chat_id=ram_rem_chat))
-    asyncio.ensure_future(send_message_at(hour=20, minutes=00, text=send_anime_girl("Доброе утро Руслану, пожелание для Руслана","admin",), chat_id=ram_rem_chat))
-    asyncio.ensure_future(send_message_at(hour=19, minutes=00, text=send_anime_girl(task=f"Илья(PilotAski) не курит уже {days_since_last(smoke_free_users.get('5848061277'))}, пожелание ему!", user_name="admin"), chat_id=ram_rem_chat))
+    while True:
+        # Создание задачи для отправки периодических сообщений
+        asyncio.ensure_future(send_message_at(hour=9, minutes=00, text=send_anime_girl("Спокойной ночи Руслану, пожелание тебя, для Руслана", "admin",), chat_id=ram_rem_chat))
+        asyncio.ensure_future(send_message_at(hour=20, minutes=00, text=send_anime_girl("Доброе утро Руслану, пожелание для Руслана","admin",), chat_id=ram_rem_chat))
+        asyncio.ensure_future(send_message_at(hour=19, minutes=00, text=send_anime_girl(task=f"Илья(PilotAski) не курит уже {days_since_last(smoke_free_users.get('5848061277'))}, пожелание ему!", user_name="admin"), chat_id=ram_rem_chat))
 
+        await asyncio.sleep(24 * 60 * 60)
+
+async def startup_task():
     # Регистрация функции on_startup
     misc.dp.startup.register(on_startup)
 
@@ -29,7 +33,7 @@ if __name__ == "__main__":
     loop = asyncio.get_event_loop()
 
     try:
-        loop.run_until_complete(main())
+        loop.run_until_complete(asyncio.gather(main(), startup_task()))
 
     finally:
         loop.close()
