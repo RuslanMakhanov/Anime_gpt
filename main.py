@@ -9,7 +9,7 @@ ram_rem_chat = '-1002015022612'
 ls = '5848061277'
 
 async def on_startup():
-    await misc.bot.send_message(chat_id=-1002015022612, text=f"{get_time_text()} - Сервер упал, но снова поднялся")
+    await misc.bot.send_message(chat_id=ls, text=f"{get_time_text()} - Сервер упал, но снова поднялся")
 
 
 async def main():
@@ -23,12 +23,12 @@ async def main():
 
 
         message_tasks = [asyncio.create_task(send_message_at(hour=9, minutes=00, text=send_anime_girl(
-            "Спокойной ночи Руслану(@RuslanNnNn1337), пожелание от тебя, для Руслана", "admin", ), chat_id=ram_rem_chat)),
+            "Спокойной ночи Руслану(@RuslanNnNn1337), пожелание от тебя, для Руслана", "admin", ), chat_id=ls)),
                          asyncio.create_task(send_message_at(hour=20, minutes=00, text=send_anime_girl(
-                             "Доброе утро Руслану(@RuslanNnNn1337), пожелание от тебя для Руслана", "admin", ), chat_id=ram_rem_chat)),
+                             "Доброе утро Руслану(@RuslanNnNn1337), пожелание от тебя для Руслана", "admin", ), chat_id=ls)),
                          asyncio.create_task(send_message_at(hour=19, minutes=00, text=send_anime_girl(
                              task=f"Илья(@PilotAski) не курит уже {days_since_last(smoke_free_users.get('5848061277'))}, пожелание ему! и сделай сравнение как это долго.",
-                             user_name="admin"), chat_id=ram_rem_chat))]
+                             user_name="admin"), chat_id=ls))]
 
         print(f"{get_time_text(date=True)}: Созданы новые задачи")
         # Ждем один день перед повторным обновлением задач
