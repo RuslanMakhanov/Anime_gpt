@@ -7,7 +7,6 @@ waifu_sfw = [
     "neko",
     "shinobu",
     "megumin",
-    "bully",
     "cuddle",
     "cry",
     "hug",
@@ -16,8 +15,6 @@ waifu_sfw = [
     "lick",
     "pat",
     "smug",
-    "bonk",
-    "yeet",
     "blush",
     "smile",
     "wave",
@@ -26,14 +23,9 @@ waifu_sfw = [
     "nom",
     "bite",
     "glomp",
-    "slap",
-    "kill",
-    "kick",
     "happy",
     "wink",
-    "poke",
     "dance",
-    "cringe"
 ]
 
 
