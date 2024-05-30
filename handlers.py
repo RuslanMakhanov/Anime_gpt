@@ -40,7 +40,10 @@ async def get_chat_id(msg: Message):
 async def sent_self_image(msg: Message):
     image_url = get_data_from_response(set_api_url())
     if image_url:
-        await msg.answer_photo(photo=image_url)
+        if ".gif" in image_url:
+            await msg.answer_animation(animation=image_url)
+        else:
+            await msg.answer_photo(photo=image_url)
 
 
 @dp.message(Command("add_trigger"))
