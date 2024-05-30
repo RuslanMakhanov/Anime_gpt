@@ -1,21 +1,61 @@
 import requests
+import random
 
-api_url = 'https://api.waifu.im/search'
+# Категории из api.waifu.pics
+waifu_sfw = [
+    "waifu",
+    "neko",
+    "shinobu",
+    "megumin",
+    "bully",
+    "cuddle",
+    "cry",
+    "hug",
+    "awoo",
+    "kiss",
+    "lick",
+    "pat",
+    "smug",
+    "bonk",
+    "yeet",
+    "blush",
+    "smile",
+    "wave",
+    "highfive",
+    "handhold",
+    "nom",
+    "bite",
+    "glomp",
+    "slap",
+    "kill",
+    "kick",
+    "happy",
+    "wink",
+    "poke",
+    "dance",
+    "cringe"
+]
 
 
-def get_waifu():
+def get_random_category(list_of_category) -> str:
+    """Возвращает рандомную категорию из списка"""
+    category = random.choice(list_of_category)
+    return category
 
-    params = {
-        'included_tags': ['maid'],
 
-    }
+def set_api_url(nsfw=False) -> str:
+    api_url = f'https://api.waifu.pics/{"sfw" if nsfw is False else "nsfw"}/{get_random_category(waifu_sfw)}'
+    return api_url
 
-    response = requests.get(api_url, params=params)
 
+def get_data_from_response(url):
+    response = requests.get(url)
     if response.status_code == 200:
         data = response.json()
-        return data["images"][0]['url']
-        # Process the response data as needed
+        return data['url']
     else:
         print('Request failed with status code:', response.status_code)
         return None
+
+
+print(get_data_from_response(set_api_url()))

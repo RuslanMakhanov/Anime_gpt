@@ -1,5 +1,5 @@
 from aiogram.filters import Command
-from aiogram.types import Message, FSInputFile
+from aiogram.types import Message
 
 from func import *
 from RPG import get_rpg_game
@@ -8,7 +8,7 @@ from misc import dp
 from aiogram import F
 from modules.stt import save_voice_as_mp3, audio_to_text
 from modules.anime_one import send_anime_girl
-from modules.waifu_module import get_waifu
+from modules.waifu_module import get_data_from_response, set_api_url
 
 version = "0.1.0 Raspberry Pi"
 
@@ -38,7 +38,7 @@ async def get_chat_id(msg: Message):
 
 @dp.message(Command("waifu"))
 async def sent_self_image(msg: Message):
-    image_url = get_waifu()
+    image_url = get_data_from_response(set_api_url())
     if image_url:
         await msg.answer_photo(photo=image_url)
 
