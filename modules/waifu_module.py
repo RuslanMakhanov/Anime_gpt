@@ -5,9 +5,7 @@ import random
 waifu_sfw = [
     "waifu",
     "neko",
-    "cry",
     "awoo",
-    "kiss",
     "lick",
 ]
 
