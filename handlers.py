@@ -8,10 +8,15 @@ from misc import dp
 from aiogram import F
 from modules.stt import save_voice_as_mp3, audio_to_text
 from modules.anime_one import send_anime_girl
-from modules.waifu_module import get_data_from_response, set_api_url
+from modules.waifu_module import get_data_from_response, set_api_url, set_api_url_tr
 
 version = "0.1.0 Raspberry Pi"
 
+
+def delete_word(original_text, text_to_delete):
+    # Удаляем слово из текста
+    replace_text = original_text.replace(text_to_delete, "").strip().lower()
+    return replace_text
 
 @dp.message(Command("start"))
 async def start_handler(msg: Message):
@@ -37,7 +42,7 @@ async def get_chat_id(msg: Message):
 
 
 @dp.message(Command("waifu"))
-async def sent_self_image(msg: Message):
+async def sent_waifu_image(msg: Message):
     image_url = get_data_from_response(set_api_url())
     if image_url:
         if ".gif" in image_url:
@@ -46,13 +51,32 @@ async def sent_self_image(msg: Message):
             await msg.answer_photo(photo=image_url)
 
 
+@dp.message(Command("nsfw"))
+async def sent_nsfw_image(msg: Message):
+    tag = delete_word(original_text=msg.text, text_to_delete="/nsfw")
+
+    if tag is None:
+        image_url = get_data_from_response(set_api_url(nsfw=True))
+    elif tag == "trap":
+        image_url = get_data_from_response(set_api_url_tr(nsfw=True))
+    else:
+        image_url = get_data_from_response(set_api_url(nsfw=True))
+
+    if image_url:
+        if ".gif" in image_url:
+            await msg.answer_animation(animation=image_url)
+        else:
+            await msg.answer_photo(photo=image_url)
+
+
+
 @dp.message(Command("add_trigger"))
 async def handle_waiting_for_new_trigger_word(msg: Message):
     # Получаем текст сообщения
     original_text = msg.text
     user_name = msg.from_user.username
     # Удаляем слово из текста
-    new_trigger_word = original_text.replace("/add_trigger", "").strip().lower()
+    new_trigger_word = delete_word(original_text=original_text, text_to_delete="/add_trigger")
 
     # Проверяем, что новое триггерное слово не повторяется
     if new_trigger_word not in trigger_words_data['trigger_words'] and len(new_trigger_word) != 0:
