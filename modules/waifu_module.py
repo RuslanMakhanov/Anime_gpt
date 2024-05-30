@@ -5,27 +5,10 @@ import random
 waifu_sfw = [
     "waifu",
     "neko",
-    "shinobu",
-    "megumin",
-    "cuddle",
     "cry",
-    "hug",
     "awoo",
     "kiss",
     "lick",
-    "pat",
-    "smug",
-    "blush",
-    "smile",
-    "wave",
-    "highfive",
-    "handhold",
-    "nom",
-    "bite",
-    "glomp",
-    "happy",
-    "wink",
-    "dance",
 ]
 
 
