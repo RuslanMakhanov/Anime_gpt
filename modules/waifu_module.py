@@ -1,44 +1,41 @@
-import requests
 import random
-
-# Категории из api.waifu.pics
-waifu_sfw = [
-    "waifu",
-    "neko",
-    "awoo",
-    "lick",
-]
-
-waifu_nsfw = [
-    "waifu",
-    "neKo"
-]
+import asyncpraw
 
 
-def get_random_category(list_of_category) -> str:
-    """Возвращает рандомную категорию из списка"""
-    category = random.choice(list_of_category)
-    return category
+async def get_image_url(subreddit_name):
+    # Укажите ваши данные для аутентификации
+    client_id = 'gQbpQ1gPPg6AtyiHTq82Sw'
+    client_secret = 'Wh4ch68bTL3B2SRiUWy2K8X1W79Drg'
+    user_agent = 'GetWaifuImages/0.0.1 by PilotOfAsuka'
 
+    # Создание экземпляра Reddit
+    reddit = asyncpraw.Reddit(client_id=client_id,
+                              client_secret=client_secret,
+                              user_agent=user_agent)
 
-def set_api_url(nsfw=False) -> str:
-    api_url = f'https://api.waifu.pics/{"sfw" if nsfw is False else "nsfw"}/{get_random_category(waifu_sfw if nsfw is False else waifu_nsfw)}'
-    return api_url
+    # Получение сабреддита
+    subreddit = await reddit.subreddit(subreddit_name)
 
+    urls = []
+    # Получение топовых постов из сабреддита
+    async for submission in subreddit.top(limit=100):
+        # Проверка, содержит ли пост изображение
+        if submission.url.endswith(('jpg', 'jpeg', 'png', 'gif')):
+            urls.append(submission.url)
 
-def set_api_url_tr(nsfw=False) -> str:
-    api_url = f'https://api.waifu.pics/{"sfw" if nsfw is False else "nsfw"}/trap'
-    return api_url
-
-
-def get_data_from_response(url):
-    response = requests.get(url)
-    if response.status_code == 200:
-        data = response.json()
-        return data['url']
+    if urls:
+        return random.choice(urls)  # Выбор случайного URL
     else:
-        print('Request failed with status code:', response.status_code)
         return None
 
+subreddit_names = [
+    'AnimeGirls',
+    'AnimeART',
+    'AnimeSketch'
+]
 
-print(get_data_from_response(set_api_url_tr(nsfw=True)))
+
+async def get_image():
+    image_url = await get_image_url(random.choice(subreddit_names))
+    return image_url
+
