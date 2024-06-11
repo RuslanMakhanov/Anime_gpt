@@ -18,10 +18,12 @@ async def get_image_url(subreddit_name):
 
     urls = []
     # Получение топовых постов из сабреддита
-    async for submission in subreddit.top(limit=100):
+    async for submission in subreddit.top(limit=150):
         # Проверка, содержит ли пост изображение
         if submission.url.endswith(('jpg', 'jpeg', 'png', 'gif')):
             urls.append(submission.url)
+
+    random.shuffle(urls)
 
     if urls:
         return random.choice(urls)  # Выбор случайного URL
@@ -31,7 +33,6 @@ async def get_image_url(subreddit_name):
 subreddit_names = [
     'AnimeGirls',
     'AnimeART',
-    'AnimeSketch'
 ]
 
 

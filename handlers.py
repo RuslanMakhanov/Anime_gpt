@@ -50,6 +50,9 @@ async def sent_waifu_image(msg: Message):
         else:
             await msg.answer_photo(photo=image_url)
 
+    else:
+        await msg.answer("URL Пустой")
+
 
 
 @dp.message(Command("add_trigger"))
