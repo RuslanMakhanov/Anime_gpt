@@ -21,7 +21,7 @@ async def main():
             print(f"{task}: Удалена!")
             task.cancel()
 
-
+# Почему она желает спокойной ночи в 9 утра или че это????
         message_tasks = [asyncio.create_task(send_message_at(hour=9, minutes=00, text=send_anime_girl(
             "Спокойной ночи Руслану(@RuslanNnNn1337), пожелание от тебя, для Руслана", "admin", ), chat_id=ls)),
                          asyncio.create_task(send_message_at(hour=20, minutes=00, text=send_anime_girl(

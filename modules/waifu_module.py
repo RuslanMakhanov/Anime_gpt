@@ -1,7 +1,7 @@
 import random
 import asyncpraw
 
-
+# ЭТО ЖЕ НАДО УБРАТЬ ТЫ ЧЕ ИЛЬЯ ИЛЬЯ ЗАЧЕМ ТЫ ЧЕ
 async def get_image_url(subreddit_name):
     # Укажите ваши данные для аутентификации
     client_id = 'gQbpQ1gPPg6AtyiHTq82Sw'

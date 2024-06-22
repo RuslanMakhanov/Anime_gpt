@@ -124,7 +124,7 @@ async def smoke_free_handler(msg: Message):
     if replace_text:
         if check_date_format(replace_text):
             set_user_smoke_free(msg=msg, date=replace_text)
-            await msg.answer(send_anime_girl(task=f"уведомление что успешно установлена дата когда я бросил курить:{replace_text}", user_name=msg.from_user.username))
+            await msg.answer(send_anime_girl(task=f"уведомление что успешно установлена дата когда {user_name} бросил курить:{replace_text}", user_name=msg.from_user.username))
         else:
             await msg.answer("Дата введена не верно попробуйте еще раз\nПример: /smoke_free 2024-04-28")
     else:
@@ -132,7 +132,7 @@ async def smoke_free_handler(msg: Message):
 
     pass
 
-
+# Это то самое где бот говорил страшным голосом? 
 @dp.message(F.voice)
 async def audio(msg: Message):
     mp3_voice_path = await save_voice_as_mp3(voice=msg.voice)
